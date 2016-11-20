@@ -1,0 +1,12 @@
+Library
+Temp
+Builds
+Release
+obj
+Documentation
+Examples
+*.sln
+*.csproj
+*.userprefs
+*.unityproj
+.vs/
