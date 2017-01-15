@@ -1,20 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 using VRStandardAssets.Utils;
-using UnityEngine.Events;
+using UnityEngine.UI;
 
-public class CallEventWhenBarFilled : MonoBehaviour {
+public class InvokeButtonEventWhenBarFilled : MonoBehaviour {
 	private SelectionSlider attachedSelectionSlider;
-	public UnityEvent OnSliderFilled;
+	private Button OnSliderFilledButton;
 
 	void Awake(){
 		attachedSelectionSlider = this.gameObject.GetComponent<SelectionSlider>();
+		OnSliderFilledButton = this.gameObject.GetComponent<Button>();
 	}
 
 	// Use this for initialization
 	void InvokeEvent () {
-		if(OnSliderFilled != null){
-			OnSliderFilled.Invoke();
+		if(OnSliderFilledButton != null){
+			if(OnSliderFilledButton.onClick != null){
+				OnSliderFilledButton.onClick.Invoke();
+			}
 		}
 	}
 
