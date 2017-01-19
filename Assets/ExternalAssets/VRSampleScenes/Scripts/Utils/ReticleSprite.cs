@@ -7,11 +7,11 @@ namespace VRStandardAssets.Utils
     // It is used as a visual aid for aiming. The position of the
     // reticle is either at a default position in space or on the
     // surface of a VRInteractiveItem as determined by the VREyeRaycaster.
-    public class Reticle : MonoBehaviour
+    public class ReticleSprite : MonoBehaviour
     {
         [SerializeField] private float m_DefaultDistance = 5f;      // The default distance away from the camera the reticle is placed.
         [SerializeField] private bool m_UseNormal;                  // Whether the reticle should be placed parallel to a surface.
-        [SerializeField] private Image m_Image;                     // Reference to the image component that represents the reticle.
+		[SerializeField] private SpriteRenderer sprite;                     // Reference to the image component that represents the reticle.
         [SerializeField] private Transform m_ReticleTransform;      // We need to affect the reticle's transform.
         [SerializeField] private Transform m_Camera;                // The reticle is always placed relative to the camera.
 
@@ -40,13 +40,13 @@ namespace VRStandardAssets.Utils
 
         public void Hide()
         {
-            m_Image.enabled = false;
+			sprite.enabled = false;
         }
 
 
         public void Show()
         {
-            m_Image.enabled = true;
+			sprite.enabled = true;
         }
 
 

@@ -11,10 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#if UNITY_EDITOR
 
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using System.Collections.Generic;
 
 /// @cond
@@ -50,6 +51,7 @@ namespace Gvr.Internal {
     private Quaternion initialRotation = Quaternion.identity;
 
     private bool remoteCommunicating = false;
+	#if UNITY_EDITOR
     private bool RemoteCommunicating {
       get {
         if (!remoteCommunicating) {
@@ -58,14 +60,17 @@ namespace Gvr.Internal {
         return remoteCommunicating;
       }
     }
+	#endif
 
     public override void UpdateState() {
       Quaternion rot;
+		#if UNITY_EDITOR
       if (GvrViewer.Instance.UseUnityRemoteInput && RemoteCommunicating) {
         var att = Input.gyro.attitude * initialRotation;
         att = new Quaternion(att.x, att.y, -att.z, -att.w);
         rot = Quaternion.Euler(90, 0, 0) * att;
       } else {
+		#endif
         bool rolled = false;
         if (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) {
           mouseX += Input.GetAxis("Mouse X") * 5;
@@ -86,7 +91,9 @@ namespace Gvr.Internal {
           mouseZ = Mathf.Lerp(mouseZ, 0, Time.deltaTime / (Time.deltaTime + 0.1f));
         }
         rot = Quaternion.Euler(mouseY, mouseX, mouseZ);
+				#if UNITY_EDITOR
       }
+				#endif
       var neck = (rot * neckOffset - neckOffset.y * Vector3.up) * GvrViewer.Instance.NeckModelScale;
       headPose.Set(neck, rot);
 
@@ -105,12 +112,12 @@ namespace Gvr.Internal {
 
     public override void Recenter() {
       mouseX = mouseZ = 0;  // Do not reset pitch, which is how it works on the phone.
+			#if UNITY_EDITOR
       if (RemoteCommunicating) {
         //initialRotation = Quaternion.Inverse(Input.gyro.attitude);
       }
+			#endif
     }
   }
 }
 /// @endcond
-
-#endif

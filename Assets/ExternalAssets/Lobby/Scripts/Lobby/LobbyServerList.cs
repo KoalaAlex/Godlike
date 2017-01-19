@@ -36,6 +36,7 @@ namespace Prototype.NetworkLobby
 
 		public void OnGUIMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
 		{
+			Debug.LogWarning("Count :" + matches.Count);
 			if (matches.Count == 0)
 			{
                 if (currentPage == 0)

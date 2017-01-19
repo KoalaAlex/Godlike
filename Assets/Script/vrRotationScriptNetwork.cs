@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class vrRotationScript : MonoBehaviour {
+public class vrRotationScriptNetwork : NetworkBehaviour {
 
 	public float rotationSensitivity = 100.0f;
 	public float colliderAngle = 60.0f;
@@ -10,8 +11,8 @@ public class vrRotationScript : MonoBehaviour {
 	private float rotY = 0.0f; // rotation around the up/y axis
 	private float rotX = 0.0f; // rotation around the right/x axis
 
-	private GameObject player;
-	private GameObject cockpit;
+	public GameObject player;
+	public GameObject cockpit;
 	private GameObject rotationHelper;
 	private GameObject triggerLeft;
 	private GameObject triggerRight;
@@ -23,12 +24,11 @@ public class vrRotationScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		if(!isLocalPlayer){
+			return;
+		}
 		// Dieses Script verwendet 2 Trigger, jeweils Links und rechts vom Blickwinkel
-		// Beim Start werden diese 2 Trigger erzuegt und dem Cockpit zugewiesen
-
-		//Player und Cockpit in der Szene finden
-		player = GameObject.FindGameObjectWithTag("Player");
-		cockpit = GameObject.FindGameObjectWithTag("Cockpit");
+		// Beim Start werden diese 2 Trigger erzuegt und dem Cockpit zugewiese
 
 		// Aktuelle Rotation vom Spieler 
 		rot = player.transform.localRotation.eulerAngles;
@@ -88,6 +88,9 @@ public class vrRotationScript : MonoBehaviour {
 
 	void FixedUpdate()
 	{
+		if(!isLocalPlayer){
+			return;
+		}
 		fwd = Camera.main.transform.TransformDirection(Vector3.forward);
 
 		if (Physics.Raycast(Camera.main.transform.position, fwd,  out hit, 2, raycastLayer)){

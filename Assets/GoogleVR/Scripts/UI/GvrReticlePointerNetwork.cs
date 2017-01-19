@@ -13,12 +13,13 @@
 // limitations under the License.
 
 using UnityEngine;
+using UnityEngine.Networking;
 
 /// Draws a circular reticle in front of any object that the user points at.
 /// The circle dilates if the object is clickable.
 [AddComponentMenu("GoogleVR/UI/GvrReticlePointer")]
 [RequireComponent(typeof(Renderer))]
-public class GvrReticlePointer : GvrBasePointer {
+public class GvrReticlePointerNetwork : GvrBasePointerNetwork {
   /// Number of segments making the reticle circle.
   public int reticleSegments = 20;
 
@@ -54,6 +55,9 @@ public class GvrReticlePointer : GvrBasePointer {
   private float reticleOuterDiameter = 0.0f;
 
   protected override void Start () {
+		if(!isLocalPlayer){
+			return;
+		}
     base.Start();
 
     CreateReticleVertices();
@@ -62,8 +66,10 @@ public class GvrReticlePointer : GvrBasePointer {
   }
 
   void Update() {
+		if(!isLocalPlayer){
+			return;
+		}
     UpdateDiameters();
-
   }
 
   /// This is called when the 'BaseInputModule' system should be enabled.

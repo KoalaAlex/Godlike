@@ -227,7 +227,7 @@ namespace Gvr.Internal {
 
     public static BaseVRDevice GetDevice() {
       if (device == null) {
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE_OSX
         device = new EditorDevice();
 #elif ANDROID_DEVICE
     #if UNITY_HAS_GOOGLEVR
