@@ -36,7 +36,10 @@ namespace Prototype.NetworkLobby
 
 		public void OnGUIMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
 		{
-			Debug.LogWarning("Count :" + matches.Count);
+			Debug.LogWarning("Match Count :" + matches.Count + " and SUCCESS: " + success);
+			if(!success){
+				Debug.LogWarning("ExtendInfo: " + extendedInfo);
+			}
 			if (matches.Count == 0)
 			{
                 if (currentPage == 0)
@@ -78,6 +81,7 @@ namespace Prototype.NetworkLobby
         {
             previousPage = currentPage;
             currentPage = page;
+			Debug.LogWarning("BASE URI Host: " + lobbyManager.matchMaker.baseUri.Host);
 			lobbyManager.matchMaker.ListMatches(page, 6, "", true, 0, 0, OnGUIMatchList);
 		}
     }

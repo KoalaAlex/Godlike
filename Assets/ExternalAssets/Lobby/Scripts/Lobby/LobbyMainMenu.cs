@@ -34,7 +34,7 @@ namespace Prototype.NetworkLobby
         public void OnClickJoin()
         {
             lobbyManager.ChangeTo(lobbyPanel);
-
+			Debug.LogWarning("Start Client on host Adress: " + lobbyManager.networkAddress);
             lobbyManager.networkAddress = ipInput.text;
             lobbyManager.StartClient();
 
@@ -56,18 +56,19 @@ namespace Prototype.NetworkLobby
 
         public void OnClickCreateMatchmakingGame()
         {
-            lobbyManager.StartMatchMaker();
+			lobbyManager.StartMatchMaker();
+			Debug.LogWarning("hosting on " + lobbyManager.matchMaker.baseUri.Host);
+			//Debug.LogWarning("Ex Ip: " + Network.player.externalIP);
             lobbyManager.matchMaker.CreateMatch(
                 matchNameInput.text,
                 (uint)lobbyManager.maxPlayers,
                 true,
 				"", "", "", 0, 0,
 				lobbyManager.OnMatchCreate);
-
             lobbyManager.backDelegate = lobbyManager.StopHost;
             lobbyManager._isMatchmaking = true;
             lobbyManager.DisplayIsConnecting();
-
+			Debug.LogWarning("Create Match with Matchmaker - Host : " + lobbyManager.matchHost);
             lobbyManager.SetServerInfo("Matchmaker Host", lobbyManager.matchHost);
         }
 

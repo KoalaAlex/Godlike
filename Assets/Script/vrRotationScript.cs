@@ -10,8 +10,8 @@ public class vrRotationScript : MonoBehaviour {
 	private float rotY = 0.0f; // rotation around the up/y axis
 	private float rotX = 0.0f; // rotation around the right/x axis
 
-	private GameObject player;
-	private GameObject cockpit;
+	public GameObject player;
+	public GameObject cockpit;
 	private GameObject rotationHelper;
 	private GameObject triggerLeft;
 	private GameObject triggerRight;
@@ -25,10 +25,6 @@ public class vrRotationScript : MonoBehaviour {
 	void Start () {
 		// Dieses Script verwendet 2 Trigger, jeweils Links und rechts vom Blickwinkel
 		// Beim Start werden diese 2 Trigger erzuegt und dem Cockpit zugewiesen
-
-		//Player und Cockpit in der Szene finden
-		player = GameObject.FindGameObjectWithTag("Player");
-		cockpit = GameObject.FindGameObjectWithTag("Cockpit");
 
 		// Aktuelle Rotation vom Spieler 
 		rot = player.transform.localRotation.eulerAngles;

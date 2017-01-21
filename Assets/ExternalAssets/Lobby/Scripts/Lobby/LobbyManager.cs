@@ -65,6 +65,10 @@ namespace Prototype.NetworkLobby
             DontDestroyOnLoad(gameObject);
 
             SetServerInfo("Offline", "None");
+
+			//Debug.LogWarning("IP: " + Network.player.ipAddress);
+			//networkAddress = Network.player.ipAddress;
+			//Debug.LogWarning("ExIP: " + Network.player.externalIP);
         }
 
         public override void OnLobbyClientSceneChanged(NetworkConnection conn)
@@ -222,8 +226,6 @@ namespace Prototype.NetworkLobby
         }
 
 
-
-
         public void KickedMessageHandler(NetworkMessage netMsg)
         {
             infoPanel.Display("Kicked by Server", "Close", null);
@@ -238,6 +240,7 @@ namespace Prototype.NetworkLobby
 
             ChangeTo(lobbyPanel);
             backDelegate = StopHostClbk;
+			Debug.LogWarning("HOSTING!!! - : " + networkAddress);
             SetServerInfo("Hosting", networkAddress);
         }
 
@@ -245,6 +248,14 @@ namespace Prototype.NetworkLobby
 		{
 			base.OnMatchCreate(success, extendedInfo, matchInfo);
             _currentMatchID = (System.UInt64)matchInfo.networkId;
+			networkAddress = matchInfo.address;
+			Debug.LogWarning("Match is created Sucessfull : " + success);
+			Debug.LogWarning("Ip Adress Match Host : " + matchInfo.address +  " Domain: " + matchInfo.domain + " Port: " + matchInfo.port);
+			Debug.LogWarning("MatchId " + _currentMatchID);
+
+			if(success){
+				// Start Host
+			}
 		}
 
 		public override void OnDestroyMatch(bool success, string extendedInfo)
