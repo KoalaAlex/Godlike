@@ -253,11 +253,11 @@ namespace Prototype.NetworkLobby
 			Debug.LogWarning("Ip Adress Match Host : " + matchInfo.address +  " Domain: " + matchInfo.domain + " Port: " + matchInfo.port);
 			Debug.LogWarning("MatchId " + _currentMatchID);
 
-			if(success){
+			/*if(success){
 				// Start Host
 				//StopHost();
 				StartHost();
-			}
+			} */
 		}
 
 		public override void OnDestroyMatch(bool success, string extendedInfo)
