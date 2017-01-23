@@ -255,6 +255,8 @@ namespace Prototype.NetworkLobby
 
 			if(success){
 				// Start Host
+				//StopHost();
+				StartHost();
 			}
 		}
 

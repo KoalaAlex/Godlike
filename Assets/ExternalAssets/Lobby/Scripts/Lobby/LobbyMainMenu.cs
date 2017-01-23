@@ -28,6 +28,7 @@ namespace Prototype.NetworkLobby
 
         public void OnClickHost()
         {
+			Debug.LogWarning("!!!!! Click Host !!!!!!");
             lobbyManager.StartHost();
         }
 
