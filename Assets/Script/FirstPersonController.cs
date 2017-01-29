@@ -164,6 +164,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 return;
             }
+
+			if(true){
+				Debug.LogWarning("No FoodstepSounds are initialized");
+				return;
+			}
+
             // pick & play a random footstep sound from the array,
             // excluding sound at index 0
             int n = Random.Range(1, m_FootstepSounds.Length);
