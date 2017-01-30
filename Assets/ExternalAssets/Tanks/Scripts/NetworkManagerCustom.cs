@@ -100,8 +100,9 @@ namespace TanksMP
                     //or implement an option in your game for players to select their preferred location
                     PhotonNetwork.ConnectToRegion(CloudRegionCode.us, appVersion);
                     #else
-                        PhotonNetwork.PhotonServerSettings.HostType = ServerSettings.HostingOption.BestRegion;
-                        PhotonNetwork.ConnectToBestCloudServer(appVersion);
+                        //PhotonNetwork.PhotonServerSettings.HostType = ServerSettings.HostingOption.BestRegion;
+                        //PhotonNetwork.ConnectToBestCloudServer(appVersion);
+						PhotonNetwork.ConnectToRegion(CloudRegionCode.eu, appVersion);
                     #endif
                     break;
 
