@@ -7,7 +7,7 @@ using System.Collections;
 using UnityEngine;
 using Photon;
 
-namespace TanksMP
+namespace Godlike
 {          
     /// <summary>
     /// Responsible for spawning AI bots when in offline mode, otherwise gets disabled.

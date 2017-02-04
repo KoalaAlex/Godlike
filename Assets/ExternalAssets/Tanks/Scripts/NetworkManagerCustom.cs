@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 using Photon;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-namespace TanksMP
+namespace Godlike
 {
     /// <summary>
     /// Custom implementation of the most Photon callback handlers for network workflows. This script is

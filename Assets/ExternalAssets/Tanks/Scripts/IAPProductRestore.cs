@@ -5,7 +5,7 @@
 
 using UnityEngine;
 
-namespace TanksMP
+namespace Godlike
 {
     /// <summary>
     /// Simple script to handle restoring purchases on iOS. Restoring purchases is a

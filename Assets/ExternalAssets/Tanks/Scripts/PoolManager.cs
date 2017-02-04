@@ -6,7 +6,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TanksMP
+namespace Godlike
 {
     /// <summary>
     /// This class provides networked object pooling functionality and stores all Pool references.

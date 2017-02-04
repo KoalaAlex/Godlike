@@ -5,7 +5,7 @@
 
 using UnityEngine;
 
-namespace TanksMP
+namespace Godlike
 {
     /// <summary>
     /// Script that makes child objects non-destroyable on scene changes.

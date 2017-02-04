@@ -5,7 +5,7 @@
 
 using UnityEngine;
 
-namespace TanksMP
+namespace Godlike
 {
     /// <summary>
     /// Projectile script for player shots with collision/hit logic.
@@ -79,6 +79,8 @@ namespace TanksMP
         //On Host, add automatic despawn coroutine
         void OnSpawn()
         {
+			Debug.LogWarning("Forward: " + transform.forward);
+			Debug.LogWarning("Rotation: " + transform.localEulerAngles);
             myRigidbody.velocity = speed * transform.forward;
             PoolManager.Despawn(gameObject, despawnDelay);
         }

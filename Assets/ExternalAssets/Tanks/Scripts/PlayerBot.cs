@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace TanksMP
+namespace Godlike
 {          
     /// <summary>
     /// Implementation of AI bots by overriding methods of the Player class.
@@ -179,9 +179,11 @@ namespace TanksMP
                     {
                         //get current enemy position and rotate this turret
                         Vector3 lookPos = inRange[i].transform.position;
-                        turret.LookAt(lookPos);
+                        /*
+						turret.LookAt(lookPos);
                         turret.eulerAngles = new Vector3(0, turret.eulerAngles.y, 0);
                         turretRotation = (short)turret.eulerAngles.y;
+                        */
 
                         //find shot direction and shoot there
                         Vector3 shotDir = lookPos - transform.position;

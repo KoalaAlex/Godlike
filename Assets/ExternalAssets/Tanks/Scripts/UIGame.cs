@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-namespace TanksMP
+namespace Godlike
 {
     /// <summary>
     /// UI script for all elements, team events and user interactions in the game scene.

@@ -7,7 +7,7 @@ using UnityEngine;
 using System.Collections;
 using Photon;
 
-namespace TanksMP
+namespace Godlike
 {
     /// <summary>
     /// Manages network-synced spawning of prefabs, in this case powerups.

@@ -7,7 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TanksMP
+namespace Godlike
 {
     /// <summary>
     /// Child class interacting and managed by the PoolManager.

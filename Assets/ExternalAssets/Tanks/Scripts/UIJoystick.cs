@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-namespace TanksMP
+namespace Godlike
 {
     /// <summary>
     /// Joystick component for controlling player movement and actions using Unity UI events.

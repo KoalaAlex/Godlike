@@ -6,12 +6,12 @@ namespace VRStandardAssets.Utils
     // generally useful when using VR, specifically looking at
     // the camera and rotating so they're always in front of
     // the camera.
-    public class cameraFollow : MonoBehaviour
+    public class TransformFollow : MonoBehaviour
     {
         [SerializeField] private bool m_LookatCamera = true;    // Whether the UI element should rotate to face the camera.
 		[SerializeField] private bool m_RotateWithCamera = true;       // Whether the UI should rotate with the camera so it is always in front.
         [SerializeField] private float m_FollowSpeed = 10f;     // The speed with which the UI should follow the camera.
-		public Camera cameraToFollow;
+		public Transform transformToFollow;
 
         private float m_DistanceFromCamera;                     // The distance the UI should stay from the camera when rotating with it.
 
@@ -19,9 +19,7 @@ namespace VRStandardAssets.Utils
         private void Start ()
         {
             // Find the distance from the UI to the camera so the UI can remain at that distance.
-			m_DistanceFromCamera = Vector3.Distance (transform.position, cameraToFollow.transform.position);
-
-
+			m_DistanceFromCamera = Vector3.Distance (transform.position, transformToFollow.position);
         }
 
 
@@ -29,16 +27,16 @@ namespace VRStandardAssets.Utils
         {
             // If the UI should look at the camera set it's rotation to point from the UI to the camera.
             if(m_LookatCamera)
-				transform.rotation = Quaternion.LookRotation(transform.position - cameraToFollow.transform.position);
+				transform.rotation = Quaternion.LookRotation(transform.position - transformToFollow.position);
 
             // If the UI should rotate with the camera...
             if (m_RotateWithCamera)
             {
                 // Find the direction the camera is looking but on a flat plane.
-				Vector3 targetDirection = cameraToFollow.transform.forward;
+				Vector3 targetDirection = transformToFollow.forward;
 
                 // Calculate a target position from the camera in the direction at the same distance from the camera as it was at Start.
-				Vector3 targetPosition = cameraToFollow.transform.position + targetDirection * m_DistanceFromCamera;
+				Vector3 targetPosition = transformToFollow.position + targetDirection * m_DistanceFromCamera;
 
                 // Set the target position  to be an interpolation of itself and the UI's position.
 				targetPosition = Vector3.Lerp(transform.position, targetPosition, m_FollowSpeed * Time.deltaTime);

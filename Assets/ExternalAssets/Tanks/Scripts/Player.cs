@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon;
 
-namespace TanksMP
+namespace Godlike
 {
     /// <summary>
     /// Networked player class implementing movement control and shooting.
@@ -28,8 +28,8 @@ namespace TanksMP
         /// <summary>
         /// Current turret rotation and shooting direction.
         /// </summary>
-        [HideInInspector]
-        public short turretRotation;
+        //[HideInInspector]
+        public short[] turretRotation;
 
         /// <summary>
         /// Delay between shots.
@@ -108,7 +108,6 @@ namespace TanksMP
         
         //reference to this rigidbody
         #pragma warning disable 0649
-		private Rigidbody rb;
 		#pragma warning restore 0649
 
 		//Alex
@@ -116,7 +115,14 @@ namespace TanksMP
 		[Header("Component to actvate if Local Player")]
 		public UnityEngine.MonoBehaviour[] compToActivate;
 		public GameObject[] gosToDestroyIfOtherPlayer;
-		public GameObject gvrViewMain;
+		public Camera camera;
+		public AudioListener audioListener;
+		public Skybox skyBox;
+		public GameObject minePlayerPrefab;
+		public MeshRenderer cockpitMR;
+		private TrailRenderer mineTrailRend;
+
+		private Transform safeCamParent;
 
         //initialize server values for this player
         void Awake()
@@ -138,6 +144,9 @@ namespace TanksMP
         {           
 			//get corresponding team and colorize renderers in team color
             Team team = GameManager.GetInstance().teams[GetView().GetTeam()];
+			mineTrailRend = this.GetComponent<TrailRenderer>();
+			mineTrailRend.colorGradient = team.trailGradient;
+			cockpitMR.material = team.cockpitMat;
             for(int i = 0; i < renderers.Length; i++)
                 renderers[i].material = team.material;
 
@@ -153,6 +162,9 @@ namespace TanksMP
 				{
 					GameObject.DestroyImmediate(gosToDestroyIfOtherPlayer[i]);
 				}
+				DestroyImmediate(camera);
+				DestroyImmediate(audioListener);
+				DestroyImmediate(skyBox);
                 return;
 			}
 			// Activate Only If Local Player
@@ -160,15 +172,12 @@ namespace TanksMP
 			{
 				compToActivate[i].enabled = true;
 			}
-			GameObject.Instantiate(gvrViewMain, this.transform);
-
-
-
+			audioListener.enabled = true;
+			skyBox.enabled = true;
+			camera.enabled = true;
+			minePlayerPrefab = GameObject.Instantiate(minePlayerPrefab, this.transform);
 			//set a global reference to the local player
             GameManager.GetInstance().localPlayer = this;
-
-			//get components and set camera target
-            rb = GetComponent<Rigidbody>();
 
 
 			/*
@@ -210,7 +219,7 @@ namespace TanksMP
         
         
         //this method gets called multiple times per second, at least 10 times or more
-		/*
+
         void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {        
             if (stream.isWriting)
@@ -221,10 +230,10 @@ namespace TanksMP
             else
             {   
                 //here we receive the turret rotation angle from others and apply it
-                this.turretRotation = (short)stream.ReceiveNext();
+                this.turretRotation = (short[])stream.ReceiveNext();
                 OnTurretRotation();
             }
-        }*/
+        }
         
 
 
@@ -236,29 +245,11 @@ namespace TanksMP
             if (!photonView.isMine)
             {
                 //keep turret rotation updated for all clients
-                //OnTurretRotation();
+                OnTurretRotation();
                 return;
             }
 
 			/*
-            //movement variables
-            Vector2 moveDir;
-            Vector2 turnDir;
-
-            //reset moving input when no arrow keys are pressed down
-            if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
-            {
-                moveDir.x = 0;
-                moveDir.y = 0;
-            }
-            else
-            {
-                //read out moving directions and calculate force
-                moveDir.x = Input.GetAxis("Horizontal");
-                moveDir.y = Input.GetAxis("Vertical");
-                Move(moveDir);
-            }
-
             //cast a ray on a plane at the mouse position for detecting where to shoot 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Plane plane = new Plane(Vector3.up, Vector3.up);
@@ -272,20 +263,14 @@ namespace TanksMP
 
             //we've converted the mouse position to a direction
             turnDir = new Vector2(hitPos.x, hitPos.z);
-
-            //rotate turret to look at the mouse direction
-            RotateTurret(new Vector2(hitPos.x, hitPos.z));
 			*/
+            //rotate turret to look at the mouse direction
+            RotateTurret();
+
+
             //shoot bullet on left mouse click
             if (Input.GetButton("Fire1"))
                 Shoot();
-			/*
-			//replicate input to mobile controls for illustration purposes
-			#if UNITY_EDITOR
-				GameManager.GetInstance().ui.controls[0].position = moveDir;
-				GameManager.GetInstance().ui.controls[1].position = turnDir;
-			#endif
-			*/
         }
         #endif
             
@@ -298,43 +283,18 @@ namespace TanksMP
             return this.photonView;
         }
 
-		/*
-        //moves rigidbody in the direction passed in
-        void Move(Vector2 direction = default(Vector2))
-        {
-            //if direction is not zero, rotate player in the moving direction relative to camera
-            if (direction != Vector2.zero)
-                transform.rotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.y))
-                                     * Quaternion.Euler(0, camFollow.camTransform.eulerAngles.y, 0);
-
-            //create movement vector based on current rotation and speed
-            Vector3 movementDir = transform.forward * moveSpeed * Time.deltaTime;
-            //apply vector to rigidbody position
-            rb.MovePosition(rb.position + movementDir);
-        }
-
-
-        //on movement drag ended
-        void MoveEnd()
-        {
-            //reset rigidbody physics values
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        }
-
-
         //rotates turret to the direction passed in
-        void RotateTurret(Vector2 direction = default(Vector2))
+        void RotateTurret()
         {
-            //don't rotate without values
-            if (direction == Vector2.zero)
-                return;
-
             //get rotation value as angle out of the direction we received
-            turretRotation = (short)Quaternion.LookRotation(new Vector3(direction.x, 0, direction.y)).eulerAngles.y;
+            //turretRotation = (short)Quaternion.LookRotation(new Vector3(direction.x, 0, direction.y)).eulerAngles.y;
+			short[] sendShort = new short[2];
+			sendShort[0] = (short)turret.eulerAngles.x;
+			sendShort[1] = (short)turret.eulerAngles.y;
+			turretRotation = sendShort;
             OnTurretRotation();
         }
-		*/
+
 
         //on shot drag start set small delay for first shot
         void ShootBegin()
@@ -358,6 +318,7 @@ namespace TanksMP
                 //also we are sending it as a short array (only x,z - skip y) to save additional bandwidth
                 short[] pos = new short[] { (short)(shotPos.position.x * 10), (short)(shotPos.position.z * 10)};
                 //send shot request with origin to server
+					Debug.LogWarning("TR: " + turretRotation);
                 this.photonView.RPC("CmdShoot", PhotonTargets.AllViaServer, pos, turretRotation);
             }
         }
@@ -365,7 +326,7 @@ namespace TanksMP
         
         //called on the server first but forwarded to all clients
         [PunRPC]
-        protected void CmdShoot(short[] position, short angle)
+        protected void CmdShoot(short[] position, short[] angle)
         {   
             //get current bullet type
             int currentBullet = GetView().GetBullet();
@@ -373,7 +334,9 @@ namespace TanksMP
             //calculate center between shot position sent and current server position (factor 0.6f = 40% client, 60% server)
             //this is done to compensate network lag and smoothing it out between both client/server positions
             Vector3 shotCenter = Vector3.Lerp(shotPos.position, new Vector3(position[0]/10f, shotPos.position.y, position[1]/10f), 0.6f);
-            Quaternion syncedRot = turret.rotation = Quaternion.Euler(0, angle, 0);
+			Quaternion syncedRot = turret.rotation = Quaternion.Euler(angle[0], angle[1], 0);
+
+			Debug.LogWarning("SYNC: " +syncedRot);
 
             //spawn bullet using pooling
             GameObject obj = PoolManager.Spawn(bullets[currentBullet], shotCenter, syncedRot);
@@ -401,15 +364,18 @@ namespace TanksMP
             if (shotClip) AudioManager.Play3D(shotClip, shotPos.position, 0.1f);
         }
 
-		/*
+
         //hook for updating turret rotation locally
         void OnTurretRotation()
         {
+			if(turretRotation == null || turretRotation.Length < 2){
+				return;
+			}
             //we don't need to check for local ownership when setting the turretRotation,
             //because OnPhotonSerializeView PhotonStream.isWriting == true only applies to the owner
-            turret.rotation = Quaternion.Euler(0, turretRotation, 0);
+			turret.rotation = Quaternion.Euler(turretRotation[0], turretRotation[1], 0);
         }
-		*/
+
 
         //hook for updating health locally
         //(the actual value updates via player properties)
@@ -489,7 +455,22 @@ namespace TanksMP
         protected virtual void RpcRespawn()
         {
             //toggle visibility for player gameobject (on/off)
-            gameObject.SetActive(!gameObject.activeInHierarchy);
+			if(gameObject.activeInHierarchy){
+				if(photonView.isMine){
+					safeCamParent = camera.transform.parent;
+					camera.transform.parent = null;
+					minePlayerPrefab.transform.parent = null;
+				}
+				gameObject.SetActive(false);
+			}
+			else{
+				if(photonView.isMine){
+					camera.transform.parent = safeCamParent;
+					minePlayerPrefab.transform.parent = safeCamParent;
+				}
+				gameObject.SetActive(true);
+			}
+            //gameObject.SetActive(!gameObject.activeInHierarchy);
             bool isActive = gameObject.activeInHierarchy;
 
             //the player has been killed
@@ -521,10 +502,7 @@ namespace TanksMP
                 ResetPosition();
             else
             {
-                //local player was killed, set camera to follow the killer
-                camFollow.target = killedBy.transform;
-                //hide input controls and other HUD elements
-                camFollow.HideMask(true);
+				// Delete This
                 //display respawn window (only for local player)
                 GameManager.GetInstance().DisplayDeath();
             }
@@ -548,19 +526,12 @@ namespace TanksMP
         public void ResetPosition()
         {
             //start following the local player again
-            camFollow.target = turret;
-            camFollow.HideMask(false);
 
             //get team area and reposition it there
             transform.position = GameManager.GetInstance().GetSpawnPosition(GetView().GetTeam());
 
             //reset forces modified by input
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
             transform.rotation = Quaternion.identity;
-            //reset input left over
-            GameManager.GetInstance().ui.controls[0].OnEndDrag(null);
-            GameManager.GetInstance().ui.controls[1].OnEndDrag(null);
         }
 
 

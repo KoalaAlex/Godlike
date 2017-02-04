@@ -7,7 +7,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace TanksMP
+namespace Godlike
 {
     /// <summary>
     /// UI script for all elements, settings and user interactions in the menu scene.

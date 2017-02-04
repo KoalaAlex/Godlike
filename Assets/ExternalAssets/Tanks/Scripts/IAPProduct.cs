@@ -9,7 +9,7 @@ using UnityEngine.UI;
 using UnityEngine.Purchasing;
 #endif
 
-namespace TanksMP
+namespace Godlike
 {
     /// <summary>
     /// Describes an in-app purchase product that can be bought by using Unity IAP.
