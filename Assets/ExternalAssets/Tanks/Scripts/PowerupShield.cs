@@ -4,7 +4,7 @@
  * 	otherwise make available to any third party the Service or the Content. */
 using UnityEngine;
 
-namespace TanksMP
+namespace Godlike
 {
     /// <summary>
     /// Custom powerup implementation for adding player shield points.

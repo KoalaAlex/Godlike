@@ -10,7 +10,7 @@ using Photon;
 using UnityEngine.Advertisements;
 #endif
 
-namespace TanksMP
+namespace Godlike
 {
     /// <summary>
     /// Manages game workflow and provides high-level access to networked logic during a game.
@@ -289,5 +289,9 @@ namespace TanksMP
         /// component attached, a point within the collider bounds will be used.
         /// </summary>
         public Transform spawn;
+
+		public Gradient trailGradient;
+
+		public Material cockpitMat;
     }
 }

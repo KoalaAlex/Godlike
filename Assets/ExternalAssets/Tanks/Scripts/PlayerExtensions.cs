@@ -5,7 +5,7 @@
 
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-namespace TanksMP
+namespace Godlike
 {
     /// <summary>
     /// This class extends Photon's PhotonPlayer object by custom properties.

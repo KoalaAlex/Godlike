@@ -11,7 +11,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace TanksMP
+namespace Godlike
 {
     /// <summary>
     /// Manager handling the full workflow of recording gameplay videos,

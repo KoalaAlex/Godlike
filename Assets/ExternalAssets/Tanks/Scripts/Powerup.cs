@@ -5,7 +5,7 @@
 
 using UnityEngine;
 
-namespace TanksMP
+namespace Godlike
 {
 	public class Powerup : MonoBehaviour 
 	{	    
@@ -34,8 +34,11 @@ namespace TanksMP
 		{
             if (!PhotonNetwork.isMasterClient)
                 return;
-            
     		GameObject obj = col.gameObject;
+			if(obj.tag != "Player"){
+				Debug.LogWarning("Object is not player!");
+				return;
+			}
 			Player player = obj.GetComponent<Player>();
 
             //no need to check whether player is null

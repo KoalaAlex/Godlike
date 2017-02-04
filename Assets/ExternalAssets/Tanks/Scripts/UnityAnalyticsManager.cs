@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Analytics;
 
-namespace TanksMP
+namespace Godlike
 { 
     /// <summary>
     /// Manager fo tracking user actions in-game and sending them to further processing
